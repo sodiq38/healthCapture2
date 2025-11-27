@@ -24,6 +24,7 @@ import {
 import "./App.css";
 import {
   Activity,
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   CalendarIcon,
@@ -101,7 +102,7 @@ interface SectionProps {
   formData: FormData;
   updateFormData: <K extends keyof FormData>(
     field: K,
-    value: FormData[K],
+    value: FormData[ K ],
   ) => void;
   onNext?: () => void;
   onBack?: () => void;
@@ -112,7 +113,7 @@ interface MedicalProfileProps extends SectionProps {
     K extends keyof Pick<FormData, "conditions" | "allergies" | "familyIssues">,
   >(
     field: K,
-    value: FormData[K][number],
+    value: FormData[ K ][ number ],
   ) => void;
 }
 
@@ -155,7 +156,7 @@ const BLOOD_GROUPS: readonly BloodGroup[] = [
   "O+",
   "O-",
 ] as const;
-const GENOTYPES: readonly Genotype[] = ["AA", "AS", "AC", "SS", "SC"] as const;
+const GENOTYPES: readonly Genotype[] = [ "AA", "AS", "AC", "SS", "SC" ] as const;
 const SEXES: readonly Sex[] = [
   "Male",
   "Female",
@@ -177,9 +178,9 @@ const RELATIONSHIPS: readonly Relationship[] = [
 ] as const;
 
 function App() {
-  const [currentSection, setCurrentSection] = useState<number>(0);
-  const [showForms, setShowForms] = useState<boolean>(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [ currentSection, setCurrentSection ] = useState<number>(0);
+  const [ showForms, setShowForms ] = useState<boolean>(false);
+  const [ formData, setFormData ] = useState<FormData>({
     lagId: "LAG-2024-00789",
     fullName: "Adebayo Olamide",
     email: "adebayo.olamide@email.com",
@@ -204,26 +205,26 @@ function App() {
     emergencyPhone: "",
   });
 
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [ showSuccess, setShowSuccess ] = useState<boolean>(false);
 
   const updateFormData = <K extends keyof FormData>(
     field: K,
-    value: FormData[K],
+    value: FormData[ K ],
   ): void => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [ field ]: value }));
   };
 
   const toggleMultiSelect = <
     K extends keyof Pick<FormData, "conditions" | "allergies" | "familyIssues">,
   >(
     field: K,
-    value: FormData[K][number],
+    value: FormData[ K ][ number ],
   ): void => {
     setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].includes(value)
-        ? prev[field].filter((item) => item !== value)
-        : [...prev[field], value],
+      [ field ]: prev[ field ].includes(value)
+        ? prev[ field ].filter((item) => item !== value)
+        : [ ...prev[ field ], value ],
     }));
   };
 
@@ -294,12 +295,12 @@ function App() {
 
   return (
     <div className="min-h-screen grid place-items-center w-full">
-      <div className="px-4 py-8 min-w-400 ">
-        <header className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">
+      <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-8 w-full max-w-4xl">
+        <header className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2 sm:mb-4">
             Medical Information Form
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600">
             Complete your health profile for better care
           </p>
         </header>
@@ -314,11 +315,11 @@ function App() {
             <div className="transition-all duration-300">{renderSection()}</div>
           </>
         ) : (
-          <div className="text-center space-y-4 max-w-[20rem] mx-auto">
-            <h1 className="font-semibold text-2xl">Enter your LAG ID</h1>
-            <Input placeholder="LAGXXXXXXX" />
+          <div className="text-center space-y-4 max-w-[20rem] mx-auto px-4">
+            <h1 className="font-semibold text-xl sm:text-2xl">Enter your LAG ID</h1>
+            <Input placeholder="LAGXXXXXXX" className="text-base" />
             <Button
-              className="w-full"
+              className="w-full text-base sm:text-lg"
               onClick={() => {
                 setShowForms(true);
               }}
@@ -344,10 +345,10 @@ function ProgressBar({
   const progress = ((currentSection + 1) / SECTIONS.length) * 100;
 
   return (
-    <div className="mb-8">
-      <div className="flex justify-between mb-2">
+    <div className="mb-6 sm:mb-8">
+      <div className="flex justify-between mb-3 sm:mb-4 gap-1 sm:gap-2">
         {SECTIONS.map((section, index) => {
-          const IconComponent = section.icon;
+          const IconComponent = section.icon as React.FC;
           return (
             <div
               onClick={() => setCurrentSection(index)}
@@ -355,24 +356,23 @@ function ProgressBar({
               className="flex flex-col items-center flex-1 cursor-pointer"
             >
               <div
-                className={`w-20 h-20 rounded-full flex items-center justify-center mb-1 transition-all duration-300 ${
-                  index <= currentSection
-                    ? "bg-blue-600 text-white scale-110"
-                    : "bg-gray-200 text-gray-500"
-                }`}
+                className={`w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mb-1 transition-all duration-300 text-sm sm:text-base md:text-lg ${index <= currentSection
+                  ? "bg-blue-600 text-white scale-110"
+                  : "bg-gray-200 text-gray-500"
+                  }`}
               >
-                <IconComponent className="w-5 h-5" />
+                <IconComponent />
               </div>
-              <span className="text-xl text-center hidden sm:block text-gray-600">
+              <span className="text-xs sm:text-sm md:text-base lg:text-lg text-center hidden md:block text-gray-600">
                 {section.title}
               </span>
             </div>
           );
         })}
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
         <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+          className="bg-blue-600 h-1.5 sm:h-2 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -383,21 +383,21 @@ function ProgressBar({
 function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
   return (
     <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3">
-        <div className="flex items-center gap-3">
-          <FaUser className="text-3xl" />
+      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <FaUser className="text-xl sm:text-2xl md:text-3xl" />
           <div>
-            <h2 className="text-4xl">Basic Information</h2>
-            <p className="text-xl text-blue-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Basic Information</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-blue-100">
               Let's start with the essentials
             </p>
           </div>
         </div>
       </div>
-      <div className="p-6 py-8 space-y-6">
+      <div className="p-4 sm:p-6 py-6 sm:py-8 space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="lagId" className="text-xl">
+            <Label htmlFor="lagId" className="text-base sm:text-lg md:text-xl">
               LAG ID <span className="text-red-400">*</span>
             </Label>
             <Input
@@ -408,7 +408,7 @@ function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-xl">
+            <Label htmlFor="fullName" className="text-base sm:text-lg md:text-xl">
               Full Name <span className="text-red-400">*</span>
             </Label>
             <Input
@@ -421,7 +421,7 @@ function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-xl">
+          <Label htmlFor="email" className="text-base sm:text-lg md:text-xl">
             Email Address <span className="text-red-400">*</span>
           </Label>
           <Input
@@ -536,7 +536,7 @@ function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
         </div>
 
         <div className="flex justify-end">
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-xl">
+          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -548,7 +548,6 @@ function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
 function MedicalProfile({
   formData,
   updateFormData,
-  toggleMultiSelect,
   onNext,
   onBack,
 }: MedicalProfileProps) {
@@ -570,8 +569,8 @@ function MedicalProfile({
 
   const saveEditCondition = (index: number) => {
     if (formData.editingConditionValue?.trim()) {
-      const newConditions = [...formData.conditions];
-      newConditions[index] = formData.editingConditionValue.trim();
+      const newConditions = [ ...formData.conditions ];
+      newConditions[ index ] = formData.editingConditionValue.trim();
       updateFormData("conditions", newConditions);
       updateFormData("editingConditionIndex", null);
       updateFormData("editingConditionValue", "");
@@ -608,8 +607,8 @@ function MedicalProfile({
 
   const saveEditAllergy = (index: number) => {
     if (formData.editingAllergyValue?.trim()) {
-      const newAllergies = [...formData.allergies];
-      newAllergies[index] = formData.editingAllergyValue.trim();
+      const newAllergies = [ ...formData.allergies ];
+      newAllergies[ index ] = formData.editingAllergyValue.trim();
       updateFormData("allergies", newAllergies);
       updateFormData("editingAllergyIndex", null);
       updateFormData("editingAllergyValue", "");
@@ -646,8 +645,8 @@ function MedicalProfile({
 
   const saveEdit = (index: number) => {
     if (formData.editingMedicationValue?.trim()) {
-      const newMeds = [...formData.medications];
-      newMeds[index] = formData.editingMedicationValue.trim();
+      const newMeds = [ ...formData.medications ];
+      newMeds[ index ] = formData.editingMedicationValue.trim();
       updateFormData("medications", newMeds);
       updateFormData("editingMedicationIndex", null);
       updateFormData("editingMedicationValue", "");
@@ -668,21 +667,21 @@ function MedicalProfile({
 
   return (
     <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3">
-        <div className="flex items-center gap-3">
-          <HeartPulse className="text-3xl w-8 h-8" />
+      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <HeartPulse className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
           <div>
-            <h2 className="text-3xl">Medical Profile</h2>
-            <p className="text-lg text-red-100">Your current health snapshot</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl">Medical Profile</h2>
+            <p className="text-sm sm:text-base md:text-lg text-red-100">Your current health snapshot</p>
           </div>
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
-          <Label htmlFor="conditions" className="text-xl font-semibold">
+          <Label htmlFor="conditions" className="text-base sm:text-lg md:text-xl font-semibold">
             Underlying Health Conditions
           </Label>
-          <p className="text-lg text-gray-500 mb-3">
+          <p className="text-sm sm:text-base md:text-lg text-gray-500 mb-3">
             Add any health conditions you have
           </p>
           <div className="flex gap-2 mb-4">
@@ -1006,11 +1005,11 @@ function MedicalProfile({
           )}
         </div>
 
-        <div className="flex justify-between pt-4">
-          <Button variant="outline" className="text-xl" onClick={onBack}>
+        <div className="flex flex-col sm:flex-row justify-between gap-3 pt-4">
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
             <ArrowLeft className="mr-2 w-4 h-4" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-xl">
+          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
             Next <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </div>
@@ -1025,9 +1024,9 @@ function MedicalHistory({
   onNext,
   onBack,
 }: SectionProps): JSX.Element {
-  const [surgeryName, setSurgeryName] = React.useState("");
-  const [surgeryDate, setSurgeryDate] = React.useState("");
-  const [editIndex, setEditIndex] = React.useState<number | null>(null);
+  const [ surgeryName, setSurgeryName ] = React.useState("");
+  const [ surgeryDate, setSurgeryDate ] = React.useState("");
+  const [ editIndex, setEditIndex ] = React.useState<number | null>(null);
 
   const surgeries = formData.surgeries ? JSON.parse(formData.surgeries) : [];
 
@@ -1038,11 +1037,11 @@ function MedicalHistory({
     let updatedSurgeries;
 
     if (editIndex !== null) {
-      updatedSurgeries = [...surgeries];
-      updatedSurgeries[editIndex] = newSurgery;
+      updatedSurgeries = [ ...surgeries ];
+      updatedSurgeries[ editIndex ] = newSurgery;
       setEditIndex(null);
     } else {
-      updatedSurgeries = [...surgeries, newSurgery];
+      updatedSurgeries = [ ...surgeries, newSurgery ];
     }
 
     updateFormData("surgeries", JSON.stringify(updatedSurgeries));
@@ -1051,8 +1050,8 @@ function MedicalHistory({
   };
 
   const handleEdit = (index: number) => {
-    setSurgeryName(surgeries[index].name);
-    setSurgeryDate(surgeries[index].date);
+    setSurgeryName(surgeries[ index ].name);
+    setSurgeryDate(surgeries[ index ].date);
     setEditIndex(index);
   };
 
@@ -1065,27 +1064,27 @@ function MedicalHistory({
 
   return (
     <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3">
-        <div className="flex items-center gap-3">
-          <FaHistory className="text-3xl" />
+      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <FaHistory className="text-xl sm:text-2xl md:text-3xl" />
           <div>
-            <h2 className="text-3xl">Medical History</h2>
-            <p className="text-lg text-purple-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl">Medical History</h2>
+            <p className="text-sm sm:text-base md:text-lg text-purple-100">
               Past conditions and treatments
             </p>
           </div>
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <Alert className="bg-blue-50 border-blue-200">
           <AlertDescription>
             This information helps healthcare providers understand your complete
             medical background and make informed decisions.
           </AlertDescription>
         </Alert>
-        <div className="space-y-4 pb-20">
-          <Label className="text-xl">Previous Surgeries</Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="space-y-4 pb-12 sm:pb-16 md:pb-20">
+          <Label className="text-base sm:text-lg md:text-xl">Previous Surgeries</Label>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div>
               <Input
                 className="p-5 text-lg"
@@ -1099,9 +1098,8 @@ function MedicalHistory({
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className={`flex-1 justify-start text-left font-normal ${
-                      !surgeryDate && "text-muted-foreground"
-                    }`}
+                    className={`flex-1 justify-start text-left font-normal ${!surgeryDate && "text-muted-foreground"
+                      }`}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {surgeryDate ? (
@@ -1122,7 +1120,7 @@ function MedicalHistory({
                     selected={surgeryDate ? new Date(surgeryDate) : undefined}
                     onSelect={(date) => {
                       if (date) {
-                        setSurgeryDate(date.toISOString().split("T")[0]);
+                        setSurgeryDate(date.toISOString().split("T")[ 0 ]);
                       }
                     }}
                   />
@@ -1174,11 +1172,11 @@ function MedicalHistory({
             </div>
           )}
         </div>
-        <div className="flex justify-between">
-          <Button variant="outline" className="text-xl" onClick={onBack}>
+        <div className="flex flex-col sm:flex-row justify-between gap-3">
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
             <FaArrowLeft className="mr-2" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-xl">
+          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -1190,7 +1188,6 @@ function MedicalHistory({
 function FamilyHealth({
   formData,
   updateFormData,
-  toggleMultiSelect,
   onNext,
   onBack,
 }: MedicalProfileProps) {
@@ -1212,8 +1209,8 @@ function FamilyHealth({
 
   const saveEditFamilyIssue = (index: number) => {
     if (formData.editingFamilyIssueValue?.trim()) {
-      const newIssues = [...formData.familyIssues];
-      newIssues[index] = formData.editingFamilyIssueValue.trim();
+      const newIssues = [ ...formData.familyIssues ];
+      newIssues[ index ] = formData.editingFamilyIssueValue.trim();
       updateFormData("familyIssues", newIssues);
       updateFormData("editingFamilyIssueIndex", null);
       updateFormData("editingFamilyIssueValue", "");
@@ -1234,18 +1231,18 @@ function FamilyHealth({
 
   return (
     <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3">
-        <div className="flex items-center gap-3">
-          <FaUsers className="text-3xl" />
+      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <FaUsers className="text-xl sm:text-2xl md:text-3xl" />
           <div>
-            <h2 className="text-3xl">Family Health Background</h2>
-            <p className="text-lg text-green-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl">Family Health Background</h2>
+            <p className="text-sm sm:text-base md:text-lg text-green-100">
               Understanding genetic factors
             </p>
           </div>
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <Alert className="bg-green-50 border-green-200">
           <AlertDescription>
             Family health history can reveal patterns that may affect your
@@ -1253,10 +1250,10 @@ function FamilyHealth({
           </AlertDescription>
         </Alert>
         <div>
-          <Label htmlFor="familyIssues" className="text-xl font-semibold">
+          <Label htmlFor="familyIssues" className="text-base sm:text-lg md:text-xl font-semibold">
             Family Health Issues
           </Label>
-          <p className="text-lg text-gray-500 mb-3">
+          <p className="text-sm sm:text-base md:text-lg text-gray-500 mb-3">
             Add any conditions that run in your immediate family
           </p>
           <div className="flex gap-2 mb-4">
@@ -1385,11 +1382,11 @@ function FamilyHealth({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex justify-between">
-          <Button variant="outline" className="text-xl" onClick={onBack}>
+        <div className="flex flex-col sm:flex-row justify-between gap-3">
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
             <FaArrowLeft className="mr-2" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-xl">
+          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -1403,7 +1400,7 @@ function EmergencyInfo({
   onBack,
   setShowSuccess,
 }: EmergencyInfoProps): JSX.Element {
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [ errors, setErrors ] = useState<ValidationErrors>({});
 
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
@@ -1425,18 +1422,18 @@ function EmergencyInfo({
 
   return (
     <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3">
-        <div className="flex items-center gap-3">
-          <FaExclamationTriangle className="text-3xl" />
+      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <FaExclamationTriangle className="text-xl sm:text-2xl md:text-3xl" />
           <div>
-            <h2 className="text-3xl">Emergency & Insurance</h2>
-            <p className="text-lg text-orange-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl">Emergency & Insurance</h2>
+            <p className="text-sm sm:text-base md:text-lg text-orange-100">
               Critical contact information
             </p>
           </div>
         </div>
       </div>
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <Alert className="bg-orange-50 border-orange-200">
           <AlertDescription>
             This information is crucial in case of medical emergencies. Please
@@ -1444,9 +1441,9 @@ function EmergencyInfo({
           </AlertDescription>
         </Alert>
 
-        <div className="flex flex-col md:flex-row gap-16">
-          <div className="space-y-2">
-            <Label htmlFor="hmoID" className="text-xl">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-12 lg:gap-16">
+          <div className="space-y-2 flex-1">
+            <Label htmlFor="hmoID" className="text-base sm:text-lg md:text-xl">
               HMO/Insurance Provider
             </Label>
             <Select
@@ -1466,8 +1463,8 @@ function EmergencyInfo({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="emergencyName" className="text-lg">
+          <div className="space-y-2 flex-1">
+            <Label htmlFor="emergencyName" className="text-base sm:text-lg">
               HMO ID<span className="text-red-400">*</span>
             </Label>
             <Input
@@ -1490,7 +1487,7 @@ function EmergencyInfo({
         <Separator />
 
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold">Emergency Contact</h3>
+          <h3 className="text-lg sm:text-xl font-semibold">Emergency Contact</h3>
 
           <div className="space-y-2">
             <Label htmlFor="emergencyName" className="text-lg">
@@ -1565,13 +1562,13 @@ function EmergencyInfo({
           </div>
         </div>
 
-        <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={onBack}>
-            <FaArrowLeft className="mr-2 text-xl" /> Back
+        <div className="flex flex-col sm:flex-row justify-between gap-3 pt-4">
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
+            <FaArrowLeft className="mr-2" /> Back
           </Button>
           <Button
             onClick={handleSubmit}
-            className="bg-green-600 hover:bg-green-700 text-xl"
+            className="bg-green-600 hover:bg-green-700 text-base sm:text-lg md:text-xl w-full sm:w-auto"
           >
             Submit Form <FaCheckCircle className="ml-2" />
           </Button>
@@ -1584,24 +1581,24 @@ function EmergencyInfo({
 function SuccessModal({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
-      <div className="max-w-md w-full animate-in zoom-in duration-300">
+      <div className="max-w-md w-full animate-in zoom-in duration-300 bg-white rounded-lg p-6 sm:p-8">
         <div className="text-center">
-          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-            <FaCheckCircle className="text-green-600 text-4xl" />
+          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <FaCheckCircle className="text-green-600 text-2xl sm:text-3xl md:text-4xl" />
           </div>
-          <h2 className="text-3xl">Form Submitted Successfully!</h2>
-          <p className="text-lg">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-2">Form Submitted Successfully!</h2>
+          <p className="text-base sm:text-lg text-gray-600">
             Your medical information has been securely saved
           </p>
         </div>
-        <div className="text-center pb-6">
-          <p className="text-lg text-gray-600 mb-6">
+        <div className="text-center pb-4 sm:pb-6 mt-4">
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-4 sm:mb-6">
             Thank you for completing your medical information form. Your
             healthcare provider now has access to your updated health profile.
           </p>
           <Button
             onClick={onClose}
-            className="w-full bg-blue-600 hover:bg-blue-700"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-base sm:text-lg"
           >
             Close
           </Button>
