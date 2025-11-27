@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import React, { useState, type JSX, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -89,7 +89,7 @@ interface FormData {
 interface Section {
   id: string;
   title: string;
-  icon: React.ComponentType;
+  icon: ReactNode;
 }
 
 interface ValidationErrors {
@@ -123,14 +123,14 @@ interface EmergencyInfoProps extends SectionProps {
 
 // Constants
 const SECTIONS: Section[] = [
-  { id: "basic", title: "Basic Information", icon: FaUser },
-  { id: "medical", title: "Medical Profile", icon: FaHeartbeat },
-  { id: "history", title: "Medical History", icon: FaHistory },
-  { id: "family", title: "Family Health", icon: FaUsers },
+  { id: "basic", title: "Basic Information", icon: <FaUser className="w-6 h-6" /> },
+  { id: "medical", title: "Medical Profile", icon: <FaHeartbeat className="w-6 h-6" /> },
+  { id: "history", title: "Medical History", icon: <FaHistory className="w-6 h-6" /> },
+  { id: "family", title: "Family Health", icon: <FaUsers className="w-6 h-6" /> },
   {
     id: "emergency",
     title: "Emergency & Insurance",
-    icon: FaExclamationTriangle,
+    icon: <FaExclamationTriangle />,
   },
 ];
 
@@ -294,13 +294,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center w-full">
+    <div className="min-h-screen grid place-items-center w-full bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
       <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-8 w-full max-w-4xl">
         <header className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent mb-2 sm:mb-4">
             Medical Information Form
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600">
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 font-medium">
             Complete your health profile for better care
           </p>
         </header>
@@ -315,11 +315,11 @@ function App() {
             <div className="transition-all duration-300">{renderSection()}</div>
           </>
         ) : (
-          <div className="text-center space-y-4 max-w-[20rem] mx-auto px-4">
-            <h1 className="font-semibold text-xl sm:text-2xl">Enter your LAG ID</h1>
-            <Input placeholder="LAGXXXXXXX" className="text-base" />
+          <div className="text-center space-y-4 max-w-sm mx-auto px-4 bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-slate-200">
+            <h1 className="font-bold text-xl sm:text-2xl text-slate-800">Enter your LAG ID</h1>
+            <Input placeholder="LAGXXXXXXX" className="text-base border-slate-300 focus:ring-2 focus:ring-blue-500" />
             <Button
-              className="w-full text-base sm:text-lg"
+              className="w-full text-base sm:text-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg transition-all"
               onClick={() => {
                 setShowForms(true);
               }}
@@ -346,33 +346,33 @@ function ProgressBar({
 
   return (
     <div className="mb-6 sm:mb-8">
-      <div className="flex justify-between mb-3 sm:mb-4 gap-1 sm:gap-2">
+      <div className="flex justify-between mb-4 sm:mb-6 gap-1 sm:gap-2">
         {SECTIONS.map((section, index) => {
-          const IconComponent = section.icon as React.FC;
           return (
             <div
               onClick={() => setCurrentSection(index)}
               key={section.id}
-              className="flex flex-col items-center flex-1 cursor-pointer"
+              className="flex flex-col items-center flex-1 cursor-pointer group"
             >
               <div
-                className={`w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mb-1 transition-all duration-300 text-sm sm:text-base md:text-lg ${index <= currentSection
-                  ? "bg-blue-600 text-white scale-110"
-                  : "bg-gray-200 text-gray-500"
+                className={`w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center mb-2 transition-all duration-300 text-sm sm:text-base md:text-lg ${index <= currentSection
+                  ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg scale-110"
+                  : "bg-slate-100 text-slate-400 border-2 border-slate-200 group-hover:border-blue-300 group-hover:text-slate-500"
                   }`}
               >
-                <IconComponent />
+                {section.icon}
               </div>
-              <span className="text-xs sm:text-sm md:text-base lg:text-lg text-center hidden md:block text-gray-600">
+              <span className={`text-xs sm:text-sm md:text-base text-center font-medium transition-colors ${index <= currentSection ? "text-blue-700" : "text-slate-500"
+                }`}>
                 {section.title}
               </span>
             </div>
           );
         })}
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+      <div className="w-full bg-slate-200 rounded-full h-2 sm:h-2.5 overflow-hidden">
         <div
-          className="bg-blue-600 h-1.5 sm:h-2 rounded-full transition-all duration-500"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 h-2 sm:h-2.5 rounded-full transition-all duration-500 shadow-sm"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -382,13 +382,15 @@ function ProgressBar({
 
 function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
   return (
-    <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <FaUser className="text-xl sm:text-2xl md:text-3xl" />
+    <div className="border border-slate-200 rounded-xl shadow-lg overflow-hidden bg-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="bg-white/20 p-2 sm:p-3 rounded-lg backdrop-blur-sm">
+            <FaUser className="text-xl sm:text-2xl md:text-3xl" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">Basic Information</h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-blue-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold">Basic Information</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-blue-50 mt-1">
               Let's start with the essentials
             </p>
           </div>
@@ -535,8 +537,8 @@ function BasicInfo({ formData, updateFormData, onNext }: SectionProps) {
           />
         </div>
 
-        <div className="flex justify-end">
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
+        <div className="flex justify-end pt-2">
+          <Button onClick={onNext} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg md:text-xl w-full sm:w-auto shadow-lg transition-all">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -666,13 +668,15 @@ function MedicalProfile({
   };
 
   return (
-    <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <HeartPulse className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+    <div className="border border-slate-200 rounded-xl shadow-lg overflow-hidden bg-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="bg-white/20 p-2 sm:p-3 rounded-lg backdrop-blur-sm">
+            <HeartPulse className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl">Medical Profile</h2>
-            <p className="text-sm sm:text-base md:text-lg text-red-100">Your current health snapshot</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Medical Profile</h2>
+            <p className="text-sm sm:text-base md:text-lg text-blue-50 mt-1">Your current health snapshot</p>
           </div>
         </div>
       </div>
@@ -1006,10 +1010,10 @@ function MedicalProfile({
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-3 pt-4">
-          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto border-slate-300 hover:bg-slate-50" onClick={onBack}>
             <ArrowLeft className="mr-2 w-4 h-4" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
+          <Button onClick={onNext} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg md:text-xl w-full sm:w-auto shadow-lg transition-all">
             Next <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </div>
@@ -1063,13 +1067,15 @@ function MedicalHistory({
   };
 
   return (
-    <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <FaHistory className="text-xl sm:text-2xl md:text-3xl" />
+    <div className="border border-slate-200 rounded-xl shadow-lg overflow-hidden bg-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="bg-white/20 p-2 sm:p-3 rounded-lg backdrop-blur-sm">
+            <FaHistory className="text-xl sm:text-2xl md:text-3xl" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl">Medical History</h2>
-            <p className="text-sm sm:text-base md:text-lg text-purple-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Medical History</h2>
+            <p className="text-sm sm:text-base md:text-lg text-blue-50 mt-1">
               Past conditions and treatments
             </p>
           </div>
@@ -1173,10 +1179,10 @@ function MedicalHistory({
           )}
         </div>
         <div className="flex flex-col sm:flex-row justify-between gap-3">
-          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto border-slate-300 hover:bg-slate-50" onClick={onBack}>
             <FaArrowLeft className="mr-2" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
+          <Button onClick={onNext} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg md:text-xl w-full sm:w-auto shadow-lg transition-all">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -1230,13 +1236,15 @@ function FamilyHealth({
   };
 
   return (
-    <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <FaUsers className="text-xl sm:text-2xl md:text-3xl" />
+    <div className="border border-slate-200 rounded-xl shadow-lg overflow-hidden bg-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="bg-white/20 p-2 sm:p-3 rounded-lg backdrop-blur-sm">
+            <FaUsers className="text-xl sm:text-2xl md:text-3xl" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl">Family Health Background</h2>
-            <p className="text-sm sm:text-base md:text-lg text-green-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Family Health Background</h2>
+            <p className="text-sm sm:text-base md:text-lg text-blue-50 mt-1">
               Understanding genetic factors
             </p>
           </div>
@@ -1383,10 +1391,10 @@ function FamilyHealth({
           </Select>
         </div>
         <div className="flex flex-col sm:flex-row justify-between gap-3">
-          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto border-slate-300 hover:bg-slate-50" onClick={onBack}>
             <FaArrowLeft className="mr-2" /> Back
           </Button>
-          <Button onClick={onNext} className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg md:text-xl w-full sm:w-auto">
+          <Button onClick={onNext} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg md:text-xl w-full sm:w-auto shadow-lg transition-all">
             Next <FaArrowRight className="ml-2" />
           </Button>
         </div>
@@ -1421,13 +1429,15 @@ function EmergencyInfo({
   };
 
   return (
-    <div className="border rounded-md border-gray-300 p-0">
-      <div className="bg-blue-700 text-white rounded-t-md p-3 sm:p-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <FaExclamationTriangle className="text-xl sm:text-2xl md:text-3xl" />
+    <div className="border border-slate-200 rounded-xl shadow-lg overflow-hidden bg-white">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="bg-white/20 p-2 sm:p-3 rounded-lg backdrop-blur-sm">
+            <FaExclamationTriangle className="text-xl sm:text-2xl md:text-3xl" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl">Emergency & Insurance</h2>
-            <p className="text-sm sm:text-base md:text-lg text-orange-100">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Emergency & Insurance</h2>
+            <p className="text-sm sm:text-base md:text-lg text-blue-50 mt-1">
               Critical contact information
             </p>
           </div>
@@ -1563,12 +1573,12 @@ function EmergencyInfo({
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-3 pt-4">
-          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto" onClick={onBack}>
+          <Button variant="outline" className="text-base sm:text-lg md:text-xl w-full sm:w-auto border-slate-300 hover:bg-slate-50" onClick={onBack}>
             <FaArrowLeft className="mr-2" /> Back
           </Button>
           <Button
             onClick={handleSubmit}
-            className="bg-green-600 hover:bg-green-700 text-base sm:text-lg md:text-xl w-full sm:w-auto"
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-base sm:text-lg md:text-xl w-full sm:w-auto shadow-lg transition-all"
           >
             Submit Form <FaCheckCircle className="ml-2" />
           </Button>
@@ -1580,25 +1590,25 @@ function EmergencyInfo({
 
 function SuccessModal({ onClose }: { onClose: () => void }): JSX.Element {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
-      <div className="max-w-md w-full animate-in zoom-in duration-300 bg-white rounded-lg p-6 sm:p-8">
-        <div className="text-center">
-          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-            <FaCheckCircle className="text-green-600 text-2xl sm:text-3xl md:text-4xl" />
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+      <div className="max-w-md w-full animate-in zoom-in duration-300 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 sm:p-8 text-center">
+          <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <FaCheckCircle className="text-white text-3xl sm:text-4xl md:text-5xl" />
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-2">Form Submitted Successfully!</h2>
-          <p className="text-base sm:text-lg text-gray-600">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent mb-2">Form Submitted Successfully!</h2>
+          <p className="text-base sm:text-lg text-slate-600 font-medium">
             Your medical information has been securely saved
           </p>
         </div>
-        <div className="text-center pb-4 sm:pb-6 mt-4">
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-4 sm:mb-6">
+        <div className="p-6 sm:p-8">
+          <p className="text-sm sm:text-base text-slate-600 mb-6 text-center leading-relaxed">
             Thank you for completing your medical information form. Your
             healthcare provider now has access to your updated health profile.
           </p>
           <Button
             onClick={onClose}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-base sm:text-lg"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg shadow-lg transition-all"
           >
             Close
           </Button>
