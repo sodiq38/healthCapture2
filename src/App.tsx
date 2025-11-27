@@ -82,6 +82,7 @@ interface FormData {
   surgeries: string;
   organDonor: OrganDonorStatus | "";
   hmoProvider: string;
+  customHmoProvider?: string;
   emergencyName: string;
   emergencyRelationship: Relationship | "";
   emergencyPhone: string;
@@ -143,6 +144,7 @@ const HMO_PROVIDERS: readonly string[] = [
   "Total Health Trust",
   "Healthcare International",
   "Clearline HMO",
+  "Bastion HMO",
   "Other",
 ] as const;
 
@@ -200,6 +202,7 @@ function App() {
     familyIssues: [],
     organDonor: "",
     hmoProvider: "",
+    customHmoProvider: "",
     emergencyName: "",
     emergencyRelationship: "",
     emergencyPhone: "",
@@ -1122,6 +1125,9 @@ function MedicalHistory({
                   <Calendar
                     defaultMonth={new Date()}
                     mode="single"
+                    captionLayout="dropdown"
+                    fromYear={1900}
+                    toYear={new Date().getFullYear()}
                     className="p-5 text-lg"
                     selected={surgeryDate ? new Date(surgeryDate) : undefined}
                     onSelect={(date) => {
@@ -1451,47 +1457,65 @@ function EmergencyInfo({
           </AlertDescription>
         </Alert>
 
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-12 lg:gap-16">
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="hmoID" className="text-base sm:text-lg md:text-xl">
-              HMO/Insurance Provider
-            </Label>
-            <Select
-              value={formData.hmoProvider}
-              onValueChange={(v: string) => updateFormData("hmoProvider", v)}
-            >
-              <SelectTrigger id="hmoProvider">
-                <SelectValue placeholder="Select your HMO provider" />
-              </SelectTrigger>
-              <SelectContent>
-                {HMO_PROVIDERS.map((provider) => (
-                  <SelectItem key={provider} value={provider}>
-                    {provider}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-12 lg:gap-16">
+            <div className="space-y-2 flex-1">
+              <Label htmlFor="hmoID" className="text-base sm:text-lg md:text-xl">
+                HMO/Insurance Provider
+              </Label>
+              <Select
+                value={formData.hmoProvider}
+                onValueChange={(v: string) => updateFormData("hmoProvider", v)}
+              >
+                <SelectTrigger id="hmoProvider">
+                  <SelectValue placeholder="Select your HMO provider" />
+                </SelectTrigger>
+                <SelectContent>
+                  {HMO_PROVIDERS.map((provider) => (
+                    <SelectItem key={provider} value={provider}>
+                      {provider}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2 flex-1">
+              <Label htmlFor="emergencyName" className="text-base sm:text-lg">
+                HMO ID<span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="emergencyName"
+                placeholder="e.g 89188129"
+                value={formData.emergencyName}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  updateFormData("emergencyName", e.target.value)
+                }
+                className={errors.emergencyName ? "border-red-500" : ""}
+              />
+              {errors.emergencyName && (
+                <p className="text-red-500 text-base mt-1">
+                  {errors.emergencyName}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-2 flex-1">
-            <Label htmlFor="emergencyName" className="text-base sm:text-lg">
-              HMO ID<span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="emergencyName"
-              placeholder="e.g 89188129"
-              value={formData.emergencyName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                updateFormData("emergencyName", e.target.value)
-              }
-              className={errors.emergencyName ? "border-red-500" : ""}
-            />
-            {errors.emergencyName && (
-              <p className="text-red-500 text-base mt-1">
-                {errors.emergencyName}
-              </p>
-            )}
-          </div>
+          {formData.hmoProvider === "Other" && (
+            <div className="space-y-2">
+              <Label htmlFor="customHmoProvider" className="text-base sm:text-lg md:text-xl">
+                Enter HMO Provider Name <span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="customHmoProvider"
+                placeholder="Enter your HMO provider name"
+                value={formData.customHmoProvider || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  updateFormData("customHmoProvider", e.target.value)
+                }
+              />
+            </div>
+          )}
         </div>
 
         <Separator />
